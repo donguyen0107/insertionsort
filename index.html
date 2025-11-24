@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mô phỏng Insertion Sort</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: "Segoe UI", system-ui, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 2rem clamp(1rem, 5vw, 5rem);
+      background: linear-gradient(135deg, #0f172a, #1d2b64);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    header {
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 0.4rem;
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+    p.sub {
+      margin: 0;
+      color: #cbd5f5;
+      font-size: 1.05rem;
+    }
+    main {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 18px;
+      padding: clamp(1rem, 3vw, 1.8rem);
+      box-shadow: 0 20px 30px rgba(2, 6, 23, 0.4);
+    }
+    .flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .step {
+      flex: 1 1 220px;
+      border-left: 4px solid #38bdf8;
+      padding-left: 1rem;
+    }
+    .algo {
+      font-family: "Fira Code", "SFMono-Regular", Consolas, monospace;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 1rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .algo code {
+      display: block;
+      color: #f8fafc;
+      white-space: pre;
+    }
+    .token-preproc {
+      color: #f472b6;
+    }
+    .token-keyword {
+      color: #38bdf8;
+    }
+    .token-type {
+      color: #a5b4fc;
+    }
+    .token-func {
+      color: #4ade80;
+    }
+    .token-number {
+      color: #facc15;
+    }
+    .token-comment {
+      color: #94a3b8;
+      font-style: italic;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+    }
+    .custom-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    input[type="number"],
+    input[type="text"],
+    input[type="range"] {
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      border-radius: 999px;
+      padding: 0.5rem 0.9rem;
+      background: rgba(15, 23, 42, 0.7);
+      color: #f8fafc;
+      font-size: 1rem;
+    }
+    input[type="text"] {
+      border-radius: 12px;
+    }
+    .custom-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+    .button-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    button {
+      border: none;
+      padding: 0.8rem 1.6rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      background: #38bdf8;
+      color: #0f172a;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    button:disabled {
+      background: #475569;
+      color: #cbd5f5;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+    button:not(:disabled):hover {
+      transform: translateY(-1px);
+      box-shadow: 0 15px 25px rgba(56, 189, 248, 0.3);
+    }
+    .bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.6rem;
+      height: 240px;
+      padding-bottom: 1rem;
+      margin-top: 1.5rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.2);
+      padding-top: 1.5rem;
+    }
+    .bar {
+      flex: 1;
+      background: #ffffff;
+      border: 2px solid rgba(15, 23, 42, 0.2);
+      border-radius: 8px 8px 0 0;
+      position: relative;
+      transition: height 0.4s ease, background 0.4s ease, transform 0.4s ease,
+        border-color 0.4s ease;
+    }
+    .bar::after {
+      content: attr(data-value);
+      position: absolute;
+      bottom: -1.8rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    .bar.current {
+      background: #facc15 !important;
+      border-color: rgba(250, 204, 21, 0.8);
+    }
+    .bar.sorted {
+      background: #22c55e;
+      border-color: rgba(34, 197, 94, 0.8);
+    }
+    .status {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #38bdf8;
+      min-height: 1.3em;
+    }
+    footer {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 640px) {
+      .bars {
+        gap: 0.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Insertion Sort</h1>
+    <p class="sub">Quan sát cách từng phần tử tìm vị trí đúng của nó trong mảng đã sắp xếp</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="controls">
+        <button id="runBtn">Bắt đầu mô phỏng</button>
+        <button id="shuffleBtn">Trộn dữ liệu</button>
+        <label>
+          Tốc độ:
+          <input id="speed" type="range" min="150" max="2000" step="50" value="650">
+        </label>
+        <span class="status" id="status"></span>
+      </div>
+      <div class="custom-inputs">
+        <div class="custom-actions">
+          <label>
+            Số phần tử (2-15)
+            <input id="countInput" type="number" min="2" max="15" value="7">
+          </label>
+          <div class="button-group">
+            <button id="applyCountBtn">Áp dụng số lượng</button>
+            <button id="randomCountBtn">Ngẫu nhiên số lượng</button>
+          </div>
+        </div>
+        <div class="custom-actions">
+          <label>
+            Nhập giá trị tuỳ chỉnh (cách nhau bằng dấu phẩy)
+            <input id="valuesInput" type="text" placeholder="Ví dụ: 8, 3, 12, 1">
+          </label>
+          <div class="button-group">
+            <button id="randomValuesBtn">Ngẫu nhiên phần tử</button>
+            <button id="applyValuesBtn">Áp dụng mảng</button>
+          </div>
+        </div>
+      </div>
+      <div class="bars" id="bars"></div>
+    </section>
+
+    <section class="card flex">
+      <article class="step">
+        <h3>1. Chia nhỏ vấn đề</h3>
+        <p>Xem mảng như hai phần: đoạn đầu đã sắp xếp và phần còn lại chưa sắp xếp.</p>
+      </article>
+      <article class="step">
+        <h3>2. Lấy phần tử kế tiếp</h3>
+        <p>Nối tiếp từ trái sang phải, chọn phần tử tiếp theo và gọi nó là <em>key</em>.</p>
+      </article>
+      <article class="step">
+        <h3>3. Đẩy các phần tử lớn hơn</h3>
+        <p>Dịch chuyển các phần tử lớn hơn key sang phải để tạo khoảng trống.</p>
+      </article>
+      <article class="step">
+        <h3>4. Cắm key vào chỗ đúng</h3>
+        <p>Chèn key vào khoảng trống đã tạo. Lặp lại cho đến khi hết mảng.</p>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Giả mã (C++ + ghi chú)</h2>
+      <pre class="algo"><code>
+<span class="token-preproc">#include &lt;bits/stdc++.h&gt;</span>
+<span class="token-keyword">using</span> <span class="token-keyword">namespace</span> std;
+
+<span class="token-keyword">void</span> <span class="token-func">insertionSort</span>(vector&lt;<span class="token-type">int</span>&gt;&amp; arr) {
+  <span class="token-comment">// Bắt đầu từ phần tử thứ hai vì phần tử đầu coi như đã có thứ tự</span>
+  <span class="token-keyword">for</span> (size_t i = <span class="token-number">1</span>; i &lt; arr.size(); ++i) {
+    <span class="token-type">int</span> key = arr[i];              <span class="token-comment">// key: phần tử cần chèn vào đoạn đã sắp xếp</span>
+    <span class="token-type">int</span> j = static_cast&lt;<span class="token-type">int</span>&gt;(i) - <span class="token-number">1</span>;
+
+    <span class="token-comment">// Dịch chuyển sang phải các phần tử lớn hơn key để tạo khoảng trống</span>
+    <span class="token-keyword">while</span> (j &gt;= <span class="token-number">0</span> &amp;&amp; arr[j] &gt; key) {
+      arr[j + <span class="token-number">1</span>] = arr[j];
+      --j;
+    }
+
+    <span class="token-comment">// Chèn key vào vị trí đúng vừa tạo</span>
+    arr[j + <span class="token-number">1</span>] = key;
+  }
+}</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Đặc điểm nổi bật</h2>
+      <ul>
+        <li>Độ phức tạp tốt nhất: O(n) với mảng gần như sắp xếp.</li>
+        <li>Trung bình/xấu nhất: O(n²) do lặp lồng nhau.</li>
+        <li>Sắp xếp tại chỗ, chỉ cần thêm 1 ô nhớ phụ.</li>
+        <li>Ổn định: các phần tử bằng nhau giữ nguyên thứ tự ban đầu.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>Được thiết kế để giúp bạn cảm nhận nhịp điệu của insertion sort.</footer>
+
+  <script>
+    const barsEl = document.getElementById("bars");
+    const statusEl = document.getElementById("status");
+    const runBtn = document.getElementById("runBtn");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const speedInput = document.getElementById("speed");
+    const countInput = document.getElementById("countInput");
+    const applyCountBtn = document.getElementById("applyCountBtn");
+    const randomCountBtn = document.getElementById("randomCountBtn");
+    const valuesInput = document.getElementById("valuesInput");
+    const randomValuesBtn = document.getElementById("randomValuesBtn");
+    const applyValuesBtn = document.getElementById("applyValuesBtn");
+
+    const MIN_COUNT = 2;
+    const MAX_COUNT = 15;
+
+    let values = [32, 11, 45, 6, 28, 14, 50];
+    let isRunning = false;
+    let stopRequested = false;
+
+    function generateRandomArray(count, min = 10, max = 99) {
+      return Array.from({ length: count }, () =>
+        Math.floor(Math.random() * (max - min + 1)) + min
+      );
+    }
+
+    function renderBars(currentIndex = null, sortedLimit = -1) {
+      barsEl.innerHTML = "";
+      const max = Math.max(...values, 1);
+      values.forEach((value, idx) => {
+        const bar = document.createElement("div");
+        bar.className = "bar";
+        bar.dataset.value = value;
+        bar.style.height = `${(value / max) * 100}%`;
+        if (idx === currentIndex) bar.classList.add("current");
+        if (idx <= sortedLimit) bar.classList.add("sorted");
+        barsEl.appendChild(bar);
+      });
+    }
+
+    async function insertionSort() {
+      isRunning = true;
+      stopRequested = false;
+      runBtn.textContent = "Dừng mô phỏng";
+      shuffleBtn.disabled = true;
+      statusEl.textContent = "Đang sắp xếp...";
+
+      for (let i = 1; i < values.length; i++) {
+        if (stopRequested) break;
+        const key = values[i];
+        let j = i - 1;
+        statusEl.textContent = `Lấy key = ${key}, so sánh với phần tử bên trái`;
+        renderBars(i - 1, i - 1);
+        await waitFrame();
+
+        while (j >= 0 && values[j] > key) {
+          if (stopRequested) break;
+          statusEl.textContent = `Vì ${values[j]} > ${key}, đẩy ${values[j]} sang phải`;
+          values[j + 1] = values[j];
+          renderBars(j, i);
+          await waitFrame();
+          j--;
+        }
+
+        if (!stopRequested) {
+          values[j + 1] = key;
+          statusEl.textContent = `Chèn ${key} tại vị trí ${j + 1}`;
+          renderBars(j + 1, i);
+          await waitFrame();
+        }
+      }
+
+      if (stopRequested) {
+        statusEl.textContent = "Đã dừng mô phỏng.";
+      } else {
+        renderBars(null, values.length);
+        statusEl.textContent = "Hoàn tất! Mảng đã được sắp xếp.";
+      }
+
+      isRunning = false;
+      runBtn.textContent = "Bắt đầu mô phỏng";
+      shuffleBtn.disabled = false;
+      stopRequested = false;
+    }
+
+    function toggleSimulation() {
+      if (isRunning) {
+        stopRequested = true;
+        runBtn.textContent = "Đang dừng...";
+      } else {
+        insertionSort();
+      }
+    }
+
+    function waitFrame() {
+      const delay = Number(speedInput.value);
+      return new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    function shuffleValues() {
+      if (isRunning) return;
+      values = values
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+      renderBars();
+      statusEl.textContent = "Mảng đã được trộn, hãy chạy lại mô phỏng.";
+      valuesInput.value = values.join(", ");
+    }
+
+    function updateValuesFromCount() {
+      if (isRunning) return;
+      let count = Number(countInput.value);
+      if (!Number.isFinite(count)) count = values.length;
+      count = Math.min(Math.max(count, MIN_COUNT), MAX_COUNT);
+      countInput.value = count;
+      values = generateRandomArray(count);
+      renderBars();
+      statusEl.textContent = `Đã tạo ${count} phần tử ngẫu nhiên.`;
+      valuesInput.value = values.join(", ");
+    }
+
+    function randomizeCount() {
+      if (isRunning) return;
+      const randomCount =
+        Math.floor(Math.random() * (MAX_COUNT - MIN_COUNT + 1)) + MIN_COUNT;
+      countInput.value = randomCount;
+      updateValuesFromCount();
+      statusEl.textContent = `Đã chọn ngẫu nhiên ${randomCount} phần tử.`;
+    }
+
+    function updateValuesFromInput() {
+      if (isRunning) return;
+      const raw = valuesInput.value.trim();
+      if (!raw) {
+        statusEl.textContent = "Vui lòng nhập ít nhất 2 giá trị.";
+        return;
+      }
+
+      const parsed = raw
+        .split(/[, ]+/)
+        .map((chunk) => chunk.trim())
+        .filter(Boolean)
+        .map(Number);
+
+      if (parsed.some((num) => !Number.isFinite(num))) {
+        statusEl.textContent = "Chỉ nhập số nguyên, cách nhau bằng dấu phẩy.";
+        return;
+      }
+
+      if (parsed.length < MIN_COUNT || parsed.length > MAX_COUNT) {
+        statusEl.textContent = `Số phần tử phải từ ${MIN_COUNT} đến ${MAX_COUNT}.`;
+        return;
+      }
+
+      values = parsed.map((num) => Math.max(1, Math.min(120, Math.round(num))));
+      countInput.value = values.length;
+      renderBars();
+      statusEl.textContent = "Đã áp dụng mảng tuỳ chỉnh.";
+    }
+
+    function randomizeValues() {
+      if (isRunning) return;
+      values = generateRandomArray(values.length);
+      renderBars();
+      statusEl.textContent = "Đã tạo ngẫu nhiên giá trị cho từng phần tử.";
+      valuesInput.value = values.join(", ");
+    }
+
+    runBtn.addEventListener("click", toggleSimulation);
+    shuffleBtn.addEventListener("click", shuffleValues);
+    applyCountBtn.addEventListener("click", updateValuesFromCount);
+    randomCountBtn.addEventListener("click", randomizeCount);
+    randomValuesBtn.addEventListener("click", randomizeValues);
+    applyValuesBtn.addEventListener("click", updateValuesFromInput);
+    speedInput.addEventListener("input", () => {
+      statusEl.textContent = `Tốc độ mỗi bước: ${speedInput.value} ms`;
+    });
+
+    renderBars();
+    countInput.value = values.length;
+    valuesInput.value = values.join(", ");
+  </script>
+</body>
+</html>
+
