@@ -436,8 +436,8 @@
                     if (values[j] > key) {
                         const moving = values[j];
                         values[j + 1] = moving;
-                        renderBars(j + 1, i, {
-                            [j + 1]: key
+                        renderBars(j, i, {
+                            [j]: key
                         });
                         await waitFrame(
                             `Vì ${moving} > ${key}, đẩy ${moving} sang phải`,
