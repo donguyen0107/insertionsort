@@ -43,6 +43,24 @@
             gap: 1.5rem;
         }
         
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        
+        .code-section {
+            min-width: fit-content;
+            max-width: 600px;
+        }
+        
+        @media (max-width: 1024px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         .card {
             background: rgba(15, 23, 42, 0.8);
             border: 1px solid rgba(148, 163, 184, 0.3);
@@ -69,7 +87,7 @@
             padding: 1rem;
             border-radius: 12px;
             overflow-x: auto;
-            line-height: 1.4;
+            line-height: 1.6;
         }
         
         .algo code {
@@ -84,12 +102,16 @@
             padding: 0 0.75rem;
             margin: 0 -0.75rem;
             border-left: 3px solid transparent;
-            transition: background 0.3s ease, border-color 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.4;
         }
         
         .code-line.active {
-            background: rgba(56, 189, 248, 0.18);
+            background: rgba(56, 189, 248, 0.25);
             border-color: #38bdf8;
+            opacity: 1;
+            transform: translateX(4px);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
         }
         
         .token-preproc {
@@ -194,50 +216,147 @@
         
         .bars {
             display: flex;
-            align-items: flex-end;
-            gap: 0.5rem;
-            height: 220px;
-            padding-bottom: 0.6rem;
+            align-items: center;
+            justify-content: center;
+            height: 260px;
+            padding: 3rem 2rem;
             margin-top: 1rem;
-            border-top: 1px solid rgba(148, 163, 184, 0.2);
-            padding-top: 1rem;
+            position: relative;
         }
         
         .bar {
-            flex: 1;
-            background: #ffffff;
-            border: 2px solid rgba(15, 23, 42, 0.2);
-            border-radius: 8px 8px 0 0;
-            position: relative;
-            transition: height 0.4s ease, background 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
-        }
-        
-        .bar::after {
-            content: attr(data-value);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 16px;
             position: absolute;
-            bottom: -1.8rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-weight: 600;
-            color: #e2e8f0;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            top: 50%;
+            transform: translateY(-50%);
+            will-change: transform, left, box-shadow;
         }
         
-        .bar.current {
-            background: #facc15 !important;
-            border-color: rgba(250, 204, 21, 0.8);
+        .bar.lifting {
+            background: linear-gradient(135deg, #fef08a 0%, #facc15 100%);
+            border-color: #eab308;
+            box-shadow: 0 12px 30px rgba(250, 204, 21, 0.6), 
+                        0 0 25px rgba(250, 204, 21, 0.4),
+                        0 0 50px rgba(250, 204, 21, 0.2);
+            z-index: 20;
+            filter: brightness(1.1);
+        }
+        
+        .bar.comparing {
+            background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 100%);
+            border-color: #8b5cf6;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.5),
+                        0 0 15px rgba(139, 92, 246, 0.3);
+            filter: brightness(1.05);
+        }
+        
+        .bar.shifting {
+            background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%);
+            border-color: #ef4444;
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.5);
         }
         
         .bar.sorted {
-            background: #22c55e;
-            border-color: rgba(34, 197, 94, 0.8);
+            background: linear-gradient(135deg, #86efac 0%, #22c55e 100%);
+            border-color: #16a34a;
+            box-shadow: 0 6px 15px rgba(34, 197, 94, 0.5);
+            animation: sorted-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+        
+        .bar.inserting {
+            background: linear-gradient(135deg, #fef08a 0%, #facc15 100%);
+            border-color: #eab308;
+            box-shadow: 0 12px 30px rgba(250, 204, 21, 0.6), 
+                        0 0 25px rgba(250, 204, 21, 0.4),
+                        0 0 50px rgba(250, 204, 21, 0.2);
+            z-index: 25;
+            filter: brightness(1.1);
+        }
+        
+        @keyframes sorted-pop {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
         
         .status {
             font-size: 1.1rem;
             font-weight: 600;
             color: #38bdf8;
             min-height: 1.3em;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+            margin-top: 1rem;
         }
+        
+        .log-container {
+            margin-top: 1rem;
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 12px;
+            padding: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: "Fira Code", "SFMono-Regular", Consolas, monospace;
+            font-size: 0.9rem;
+        }
+        
+        .log-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .log-container::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 4px;
+        }
+        
+        .log-container::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.5);
+            border-radius: 4px;
+        }
+        
+        .log-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.7);
+        }
+        
+        
+        .log-entry {
+            padding: 0.4rem 0.6rem;
+            margin: 0.2rem 0;
+            border-radius: 6px;
+            border-left: 3px solid #475569;
+            background: rgba(30, 41, 59, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .log-entry.active {
+            background: rgba(56, 189, 248, 0.2);
+            border-left-color: #38bdf8;
+            transform: translateX(5px);
+        }
+        
+        .log-entry.select { border-left-color: #facc15; }
+        .log-entry.compare { border-left-color: #a78bfa; }
+        .log-entry.shift { border-left-color: #f87171; }
+        .log-entry.insert { border-left-color: #22c55e; }
         
         footer {
             text-align: center;
@@ -260,56 +379,65 @@
     </header>
 
     <main>
-        <section class="card">
-            <div class="controls">
-                <button id="runBtn">Bắt đầu mô phỏng</button>
-                <button id="shuffleBtn">Trộn dữ liệu</button>
-                <label>
-          Tốc độ:
-          <input id="speed" type="range" min="150" max="2000" step="50" value="650">
-        </label>
-                <span class="status" id="status"></span>
-            </div>
-            <div class="custom-inputs">
-                <div class="custom-actions">
+        <div class="two-columns">
+            <section class="card">
+                <h2>Mô phỏng</h2>
+                <div class="controls">
+                    <button id="playBtn">▶️ Play</button>
+                    <button id="pauseBtn" disabled>⏸️ Pause</button>
+                    <button id="stepBackBtn" disabled>⏮️ Step Back</button>
+                    <button id="stepForwardBtn" disabled>⏭️ Step Forward</button>
+                    <button id="resetBtn">🔄 Reset</button>
+                    <button id="shuffleBtn">🔀 Shuffle</button>
                     <label>
-            Số phần tử (2-15)
-            <input id="countInput" type="number" min="2" max="15" value="7">
-          </label>
-                    <div class="button-group">
-                        <button id="applyCountBtn">Áp dụng số lượng</button>
-                        <button id="randomCountBtn">Ngẫu nhiên số lượng</button>
+              Tốc độ:
+              <input id="speed" type="range" min="300" max="2500" step="100" value="1000">
+            </label>
+                </div>
+                <div class="status" id="status">Nhấn Play để bắt đầu</div>
+                <div class="status" style="font-size: 0.95rem; margin-top: 0.5rem;" id="stepInfo"></div>
+                <div class="custom-inputs">
+                    <div class="custom-actions">
+                        <label>
+                Số phần tử (2-15)
+                <input id="countInput" type="number" min="2" max="15" value="7">
+              </label>
+                        <div class="button-group">
+                            <button id="applyCountBtn">Áp dụng số lượng</button>
+                            <button id="randomCountBtn">Ngẫu nhiên số lượng</button>
+                        </div>
+                    </div>
+                    <div class="custom-actions">
+                        <label>
+                Nhập giá trị tuỳ chỉnh (cách nhau bằng dấu phẩy)
+                <input id="valuesInput" type="text" placeholder="Ví dụ: 8, 3, 12, 1">
+              </label>
+                        <div class="button-group">
+                            <button id="randomValuesBtn">Ngẫu nhiên phần tử</button>
+                            <button id="applyValuesBtn">Áp dụng mảng</button>
+                        </div>
                     </div>
                 </div>
-                <div class="custom-actions">
-                    <label>
-            Nhập giá trị tuỳ chỉnh (cách nhau bằng dấu phẩy)
-            <input id="valuesInput" type="text" placeholder="Ví dụ: 8, 3, 12, 1">
-          </label>
-                    <div class="button-group">
-                        <button id="randomValuesBtn">Ngẫu nhiên phần tử</button>
-                        <button id="applyValuesBtn">Áp dụng mảng</button>
-                    </div>
-                </div>
-            </div>
-            <div class="bars" id="bars"></div>
-        </section>
+                <div class="bars" id="bars"></div>
+                <div class="log-container" id="logContainer"></div>
+            </section>
 
-        <section class="card">
-            <h2>Code mô phỏng</h2>
-            <pre class="algo"><code><span class="code-line" data-line="signature"><span class="token-keyword">void</span> <span class="token-func">insertionSort</span>(vector&lt;<span class="token-type">int</span>&gt;&amp; arr) {</span>
-<span class="code-line" data-line="comment-loop">  <span class="token-comment">// Bắt đầu từ phần tử thứ hai (i = 2)</span></span>
-<span class="code-line" data-line="for-loop">  <span class="token-keyword">for</span> (int i = <span class="token-number">2</span>; i &lt; arr.size(); i++) {</span>
+            <section class="card code-section">
+                <h2>Code mô phỏng</h2>
+                <pre class="algo"><code><span class="code-line" data-line="signature"><span class="token-keyword">void</span> <span class="token-func">insertionSort</span>(vector&lt;<span class="token-type">int</span>&gt;&amp; arr) {</span>
+
+<span class="code-line" data-line="for-loop">  <span class="token-keyword">for</span> (int i = <span class="token-number">1</span>; i &lt; arr.size(); i++) {</span>
 <span class="code-line" data-line="key-assign">    <span class="token-type">int</span> key = arr[i];</span>
 <span class="code-line" data-line="j-assign">    <span class="token-type">int</span> j = i - <span class="token-number">1</span>;</span>
-<span class="code-line" data-line="while-condition">    <span class="token-keyword">while</span> (j &gt;= <span class="token-number">1</span> &amp;&amp; arr[j] &gt; key) {</span>
+<span class="code-line" data-line="while-condition">    <span class="token-keyword">while</span> (j &gt;= <span class="token-number">0</span> &amp;&amp; arr[j] &gt; key) {</span>
 <span class="code-line" data-line="shift-line">      arr[j + <span class="token-number">1</span>] = arr[j];</span>
 <span class="code-line" data-line="decrement-line">      j--;</span>
 <span class="code-line" data-line="while-end">    }</span>
 <span class="code-line" data-line="insert-line">    arr[j + <span class="token-number">1</span>] = key;</span>
 <span class="code-line" data-line="for-end">  }</span>
 <span class="code-line" data-line="closing-brace">}</span></code></pre>
-        </section>
+            </section>
+        </div>
 
         <section class="card flex">
             <article class="step">
@@ -344,9 +472,18 @@
     <footer>Được thiết kế để giúp bạn cảm nhận nhịp điệu của insertion sort.</footer>
 
     <script>
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
         const barsEl = document.getElementById("bars");
         const statusEl = document.getElementById("status");
-        const runBtn = document.getElementById("runBtn");
+        const stepInfoEl = document.getElementById("stepInfo");
+        const logContainerEl = document.getElementById("logContainer");
+        const playBtn = document.getElementById("playBtn");
+        const pauseBtn = document.getElementById("pauseBtn");
+        const stepBackBtn = document.getElementById("stepBackBtn");
+        const stepForwardBtn = document.getElementById("stepForwardBtn");
+        const resetBtn = document.getElementById("resetBtn");
         const shuffleBtn = document.getElementById("shuffleBtn");
         const speedInput = document.getElementById("speed");
         const countInput = document.getElementById("countInput");
@@ -357,44 +494,338 @@
         const applyValuesBtn = document.getElementById("applyValuesBtn");
         const codeLines = document.querySelectorAll(".code-line");
 
+        // ============================================
+        // CONSTANTS
+        // ============================================
         const MIN_COUNT = 2;
         const MAX_COUNT = 15;
 
-        let values = [32, 11, 45, 6, 28, 14, 50];
-        let isRunning = false;
-        let stopRequested = false;
+        // ============================================
+        // STATE VARIABLES
+        // ============================================
+        let originalValues = [32, 11, 45, 6, 28, 14, 50];
+        let steps = [];
+        let currentStepIndex = -1;
+        let isPlaying = false;
+        let playTimer = null;
+        
+        // Track each element's position (value -> position mapping)
+        let elementPositions = {};
 
-        function generateRandomArray(count, min = 10, max = 99) {
-            return Array.from({
-                    length: count
-                }, () =>
-                Math.floor(Math.random() * (max - min + 1)) + min
-            );
+        // ============================================
+        // STEP GENERATION
+        // ============================================
+        function generateSteps(arr) {
+            const steps = [];
+            const array = [...arr];
+            
+            // Create a mapping of each unique value to track its position
+            // Since we might have duplicates, we'll use value_index as unique ID
+            const elements = array.map((value, idx) => ({
+                id: `${value}_${idx}`,
+                value: value,
+                position: idx
+            }));
+            
+            // Initial state
+            steps.push({
+                array: [...array],
+                elements: elements.map(e => ({...e})),
+                i: null,
+                j: null,
+                key: null,
+                keyElementId: null,
+                actionText: "Trạng thái ban đầu - Mảng chưa được sắp xếp",
+                actionType: "init",
+                keyIndex: null,
+                compareIndex: null,
+                sortedUpTo: 0,
+                codeLine: null,
+                shiftingIndices: [],
+                insertPosition: null
+            });
+
+            for (let i = 1; i < array.length; i++) {
+                const key = array[i];
+                const keyElement = elements.find(e => e.position === i);
+                
+                let j = i - 1;
+                let needsToMove = false;
+                
+                // Check if key needs to move
+                let tempJ = j;
+                while (tempJ >= 0 && array[tempJ] > key) {
+                    needsToMove = true;
+                    tempJ--;
+                }
+                
+                // Only lift key if it needs to move
+                if (needsToMove) {
+                    // Select key - lift it up
+                    steps.push({
+                        array: [...array],
+                        elements: elements.map(e => ({...e})),
+                        i: i,
+                        j: i - 1,
+                        key: key,
+                        keyElementId: keyElement.id,
+                        actionText: `Chọn phần tử key = ${key} tại vị trí ${i} và nhấc lên`,
+                        actionType: "select",
+                        keyIndex: i,
+                        compareIndex: null,
+                        sortedUpTo: i - 1,
+                        codeLine: "key-assign",
+                        shiftingIndices: [],
+                        insertPosition: null
+                    });
+                } else {
+                    // Key is already in correct position
+                    steps.push({
+                        array: [...array],
+                        elements: elements.map(e => ({...e})),
+                        i: i,
+                        j: i - 1,
+                        key: key,
+                        keyElementId: keyElement.id,
+                        actionText: `Phần tử ${key} đã ở đúng vị trí`,
+                        actionType: "already-sorted",
+                        keyIndex: i,
+                        compareIndex: null,
+                        sortedUpTo: i,
+                        codeLine: "key-assign",
+                        shiftingIndices: [],
+                        insertPosition: null
+                    });
+                    continue;
+                }
+                
+                // Compare and shift
+                while (j >= 0 && array[j] > key) {
+                    // Compare
+                    steps.push({
+                        array: [...array],
+                        elements: elements.map(e => ({...e})),
+                        i: i,
+                        j: j,
+                        key: key,
+                        keyElementId: keyElement.id,
+                        actionText: `So sánh: array[${j}] = ${array[j]} > key = ${key}`,
+                        actionType: "compare",
+                        keyIndex: i,
+                        compareIndex: j,
+                        sortedUpTo: i - 1,
+                        codeLine: "while-condition",
+                        shiftingIndices: [],
+                        insertPosition: null
+                    });
+
+                    // Shift - slide right
+                    const shiftingValue = array[j];
+                    const shiftingElement = elements.find(e => e.position === j);
+                    
+                    // Update positions in elements array
+                    shiftingElement.position = j + 1;
+                    array[j + 1] = array[j];
+                    
+                    steps.push({
+                        array: [...array],
+                        elements: elements.map(e => ({...e})),
+                        i: i,
+                        j: j,
+                        key: key,
+                        keyElementId: keyElement.id,
+                        actionText: `Dịch ${shiftingValue} sang phải từ vị trí ${j} → ${j + 1}`,
+                        actionType: "shift",
+                        keyIndex: i,
+                        compareIndex: null,
+                        sortedUpTo: i - 1,
+                        codeLine: "shift-line",
+                        shiftingIndices: [j + 1],
+                        insertPosition: j + 1
+                    });
+
+                    j--;
+                }
+
+                // Check if we need to show the comparison that breaks the loop
+                if (j >= 0) {
+                    steps.push({
+                        array: [...array],
+                        elements: elements.map(e => ({...e})),
+                        i: i,
+                        j: j,
+                        key: key,
+                        keyElementId: keyElement.id,
+                        actionText: `So sánh: array[${j}] = ${array[j]} ≤ key = ${key} - Dừng dịch chuyển`,
+                        actionType: "compare",
+                        keyIndex: i,
+                        compareIndex: j,
+                        sortedUpTo: i - 1,
+                        codeLine: "while-condition",
+                        shiftingIndices: [],
+                        insertPosition: null
+                    });
+                }
+
+                // Insert key - move to final position with intermediate steps
+                const finalPosition = j + 1;
+                const originalPosition = i;
+                
+                // Step 1: Key moves horizontally to target column (while staying up)
+                if (finalPosition !== originalPosition) {
+                    steps.push({
+                        array: [...array],
+                        elements: elements.map(e => ({...e})),
+                        i: i,
+                        j: j,
+                        key: key,
+                        keyElementId: keyElement.id,
+                        actionText: `Key = ${key} di chuyển sang trái đến cột ${finalPosition}`,
+                        actionType: "move-horizontal",
+                        keyIndex: finalPosition,
+                        compareIndex: null,
+                        sortedUpTo: i - 1,
+                        codeLine: "insert-line",
+                        shiftingIndices: [],
+                        insertPosition: finalPosition,
+                        keyTargetPosition: finalPosition
+                    });
+                }
+                
+                // Step 2: Key drops down to final position
+                keyElement.position = finalPosition;
+                array[j + 1] = key;
+                
+                steps.push({
+                    array: [...array],
+                    elements: elements.map(e => ({...e})),
+                    i: i,
+                    j: j,
+                    key: key,
+                    keyElementId: keyElement.id,
+                    actionText: `Chèn key = ${key} vào vị trí ${finalPosition}`,
+                    actionType: "insert",
+                    keyIndex: finalPosition,
+                    compareIndex: null,
+                    sortedUpTo: i,
+                    codeLine: "insert-line",
+                    shiftingIndices: [],
+                    insertPosition: finalPosition
+                });
+            }
+
+            // Final sorted state
+            steps.push({
+                array: [...array],
+                elements: elements.map(e => ({...e})),
+                i: null,
+                j: null,
+                key: null,
+                keyElementId: null,
+                actionText: "Hoàn tất! Mảng đã được sắp xếp",
+                actionType: "complete",
+                keyIndex: null,
+                compareIndex: null,
+                sortedUpTo: array.length - 1,
+                codeLine: null,
+                shiftingIndices: [],
+                insertPosition: null
+            });
+
+            return steps;
         }
 
-        function renderBars(currentIndex = null, sortedLimit = -1, overrides = null) {
+        // ============================================
+        // RENDERING FUNCTIONS
+        // ============================================
+        function renderBars(step) {
             barsEl.innerHTML = "";
-            const overrideMap = overrides || {};
-            const overrideValues = Object.values(overrideMap);
-            const max = Math.max(
-                Math.max(...values, 1),
-                overrideValues.length ? Math.max(...overrideValues) : 1
-            );
-            values.forEach((value, idx) => {
+            const elements = step.elements;
+            const GAP = 12;
+            const BAR_WIDTH = 80;
+            const UNIT = BAR_WIDTH + GAP;
+            
+            // Calculate total width and center offset
+            const totalWidth = elements.length * UNIT - GAP;
+            const containerWidth = barsEl.offsetWidth || 800;
+            const startOffset = (containerWidth - totalWidth) / 2;
+
+            elements.forEach((element) => {
                 const bar = document.createElement("div");
                 bar.className = "bar";
-                const displayValue = Object.prototype.hasOwnProperty.call(
-                        overrideMap,
-                        idx
-                    ) ?
-                    overrideMap[idx] :
-                    value;
-                bar.dataset.value = displayValue;
-                bar.style.height = `${(displayValue / max) * 100}%`;
-                if (idx === currentIndex) bar.classList.add("current");
-                if (idx <= sortedLimit) bar.classList.add("sorted");
+                bar.textContent = element.value;
+                bar.dataset.id = element.id;
+
+                // Calculate position based on element's current position (centered)
+                let xPos = startOffset + (element.position * UNIT);
+                let yOffset = 0;
+
+                // Apply classes and position adjustments based on step type
+                if (element.position <= step.sortedUpTo && step.actionType === "complete") {
+                    bar.classList.add("sorted");
+                }
+
+                // Key is being selected and lifted up
+                if (step.keyElementId === element.id) {
+                    if (step.actionType === "select") {
+                        bar.classList.add("lifting");
+                        yOffset = -80;
+                    }
+                    else if (step.actionType === "compare") {
+                        bar.classList.add("lifting");
+                        yOffset = -80;
+                    }
+                    else if (step.actionType === "shift") {
+                        bar.classList.add("lifting");
+                        yOffset = -80;
+                    }
+                    else if (step.actionType === "move-horizontal") {
+                        bar.classList.add("lifting");
+                        yOffset = -80;
+                        // Move to target position horizontally (centered)
+                        xPos = startOffset + (step.keyTargetPosition * UNIT);
+                    }
+                    else if (step.actionType === "insert") {
+                        bar.classList.add("inserting");
+                        yOffset = 0;
+                    }
+                    else if (step.actionType === "already-sorted") {
+                        bar.classList.add("sorted");
+                    }
+                }
+
+                // Element being compared
+                if (step.compareIndex !== null && element.position === step.compareIndex) {
+                    bar.classList.add("comparing");
+                }
+
+                // Element being shifted
+                if (step.shiftingIndices && step.shiftingIndices.includes(element.position)) {
+                    bar.classList.add("shifting");
+                }
+
+                // Apply position
+                bar.style.left = `${xPos}px`;
+                bar.style.transform = `translateY(calc(-50% + ${yOffset}px))`;
+
                 barsEl.appendChild(bar);
             });
+        }
+
+        function updateStatus(step) {
+            const icons = {
+                init: "🔷",
+                select: "🎯",
+                compare: "🔍",
+                shift: "➡️",
+                insert: "✨",
+                complete: "🎉"
+            };
+            const icon = icons[step.actionType] || "📌";
+            statusEl.textContent = `${icon} ${step.actionText}`;
+            
+            // Update step info
+            stepInfoEl.textContent = `Step ${currentStepIndex + 1}/${steps.length} | i=${step.i ?? "-"} | j=${step.j ?? "-"} | key=${step.key ?? "-"}`;
         }
 
         function setCodeHighlight(lineKey) {
@@ -406,130 +837,188 @@
             });
         }
 
-        async function insertionSort() {
-            isRunning = true;
-            stopRequested = false;
-            runBtn.textContent = "Dừng mô phỏng";
-            shuffleBtn.disabled = true;
-            statusEl.textContent = "Đang sắp xếp...";
-
-            for (let i = 1; i < values.length; i++) {
-                setCodeHighlight("for-loop");
-                if (stopRequested) break;
-                const key = values[i];
-                let j = i - 1;
-                renderBars(i, i - 1, {
-                    [i]: key
-                });
-                await waitFrame(
-                    `Lấy key = ${key} tại vị trí ${i + 1}, so sánh với phần tử bên trái`,
-                    "key-assign"
-                );
-
-                while (j >= 0) {
-                    if (stopRequested) break;
-                    await waitFrame(
-                        `So sánh ${values[j]} (vị trí ${j + 1}) với key = ${key}`,
-                        "while-condition"
-                    );
-                    if (stopRequested) break;
-                    if (values[j] > key) {
-                        const moving = values[j];
-                        values[j + 1] = moving;
-                        renderBars(j, i, {
-                            [j]: key
-                        });
-                        await waitFrame(
-                            `Vì ${moving} > ${key}, đẩy ${moving} sang phải`,
-                            "shift-line"
-                        );
-                        j--;
-                    } else {
-                        break;
-                    }
-                }
-
-                if (!stopRequested) {
-                    values[j + 1] = key;
-                    renderBars(j + 1, i);
-                    await waitFrame(`Chèn ${key} tại vị trí ${j + 2}`, "insert-line");
-                }
-            }
-
-            if (stopRequested) {
-                statusEl.textContent = "Đã dừng mô phỏng.";
-            } else {
-                renderBars(null, values.length);
-                statusEl.textContent = "Hoàn tất! Mảng đã được sắp xếp.";
-            }
-
-            isRunning = false;
-            runBtn.textContent = "Bắt đầu mô phỏng";
-            shuffleBtn.disabled = false;
-            stopRequested = false;
-            setCodeHighlight(null);
+        function addLog(step, index) {
+            const logEntry = document.createElement("div");
+            logEntry.className = `log-entry ${step.actionType}`;
+            logEntry.textContent = `[${index}] ${step.actionText}`;
+            logEntry.dataset.index = index;
+            logEntry.addEventListener("click", () => {
+                goToStep(index);
+            });
+            logContainerEl.appendChild(logEntry);
         }
 
-        function toggleSimulation() {
-            if (isRunning) {
-                stopRequested = true;
-                runBtn.textContent = "Đang dừng...";
-            } else {
-                insertionSort();
+        function updateLogHighlight() {
+            const logEntries = logContainerEl.querySelectorAll(".log-entry");
+            logEntries.forEach((entry, idx) => {
+                entry.classList.toggle("active", idx === currentStepIndex);
+            });
+            
+            // Scroll to active log
+            const activeLog = logContainerEl.querySelector(".log-entry.active");
+            if (activeLog) {
+                activeLog.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
         }
 
-        function waitFrame(message = null, highlightLine = null) {
-            const delay = Number(speedInput.value);
-            if (typeof message === "string") {
-                statusEl.textContent = message;
+        function renderLogs() {
+            logContainerEl.innerHTML = "";
+            steps.forEach((step, index) => {
+                addLog(step, index);
+            });
+        }
+
+        // ============================================
+        // STEP APPLICATION
+        // ============================================
+        function applyStep(index) {
+            if (index < 0 || index >= steps.length) return;
+            
+            currentStepIndex = index;
+            const step = steps[index];
+            
+            renderBars(step);
+            updateStatus(step);
+            setCodeHighlight(step.codeLine);
+            updateLogHighlight();
+            updateButtons();
+        }
+
+        // ============================================
+        // BUTTON STATE MANAGEMENT
+        // ============================================
+        function updateButtons() {
+            const hasSteps = steps.length > 0;
+            const canGoBack = currentStepIndex > 0;
+            const canGoForward = currentStepIndex < steps.length - 1;
+            const isAtStart = currentStepIndex <= 0;
+            const isAtEnd = currentStepIndex >= steps.length - 1;
+
+            playBtn.disabled = isPlaying || isAtEnd || !hasSteps;
+            pauseBtn.disabled = !isPlaying;
+            stepBackBtn.disabled = !canGoBack || isPlaying;
+            stepForwardBtn.disabled = !canGoForward || isPlaying;
+            resetBtn.disabled = isAtStart && !isPlaying;
+            shuffleBtn.disabled = isPlaying;
+            applyCountBtn.disabled = isPlaying;
+            randomCountBtn.disabled = isPlaying;
+            applyValuesBtn.disabled = isPlaying;
+            randomValuesBtn.disabled = isPlaying;
+        }
+
+        // ============================================
+        // PLAYBACK CONTROL
+        // ============================================
+        function play() {
+            if (isPlaying) return;
+            
+            isPlaying = true;
+            updateButtons();
+            
+            function playNextStep() {
+                if (!isPlaying) return;
+                
+                if (currentStepIndex < steps.length - 1) {
+                    stepForward();
+                    const delay = Number(speedInput.value);
+                    playTimer = setTimeout(playNextStep, delay);
+                } else {
+                    pause();
+                }
             }
-            setCodeHighlight(highlightLine);
-            return new Promise((resolve) => setTimeout(resolve, delay));
+            
+            playNextStep();
+        }
+
+        function pause() {
+            isPlaying = false;
+            if (playTimer) {
+                clearTimeout(playTimer);
+                playTimer = null;
+            }
+            updateButtons();
+        }
+
+        function stepForward() {
+            if (currentStepIndex < steps.length - 1) {
+                applyStep(currentStepIndex + 1);
+            }
+        }
+
+        function stepBack() {
+            if (currentStepIndex > 0) {
+                applyStep(currentStepIndex - 1);
+            }
+        }
+
+        function reset() {
+            pause();
+            currentStepIndex = -1;
+            steps = generateSteps(originalValues);
+            renderLogs();
+            applyStep(0);
+        }
+
+        function goToStep(index) {
+            pause();
+            applyStep(index);
+        }
+
+        // ============================================
+        // ARRAY MANIPULATION
+        // ============================================
+        function generateRandomArray(count, min = 10, max = 99) {
+            return Array.from({
+                length: count
+            }, () =>
+                Math.floor(Math.random() * (max - min + 1)) + min
+            );
         }
 
         function shuffleValues() {
-            if (isRunning) return;
-            values = values
+            if (isPlaying) return;
+            
+            originalValues = originalValues
                 .map((value) => ({
                     value,
                     sort: Math.random()
                 }))
                 .sort((a, b) => a.sort - b.sort)
-                .map(({
-                    value
-                }) => value);
-            renderBars();
-            statusEl.textContent = "Mảng đã được trộn, hãy chạy lại mô phỏng.";
-            valuesInput.value = values.join(", ");
+                .map(({ value }) => value);
+            
+            valuesInput.value = originalValues.join(", ");
+            reset();
+            statusEl.textContent = "🔀 Mảng đã được trộn";
         }
 
         function updateValuesFromCount() {
-            if (isRunning) return;
+            if (isPlaying) return;
+            
             let count = Number(countInput.value);
-            if (!Number.isFinite(count)) count = values.length;
+            if (!Number.isFinite(count)) count = originalValues.length;
             count = Math.min(Math.max(count, MIN_COUNT), MAX_COUNT);
             countInput.value = count;
-            values = generateRandomArray(count);
-            renderBars();
-            statusEl.textContent = `Đã tạo ${count} phần tử ngẫu nhiên.`;
-            valuesInput.value = values.join(", ");
+            
+            originalValues = generateRandomArray(count);
+            valuesInput.value = originalValues.join(", ");
+            reset();
+            statusEl.textContent = `✅ Đã tạo ${count} phần tử ngẫu nhiên`;
         }
 
         function randomizeCount() {
-            if (isRunning) return;
-            const randomCount =
-                Math.floor(Math.random() * (MAX_COUNT - MIN_COUNT + 1)) + MIN_COUNT;
+            if (isPlaying) return;
+            
+            const randomCount = Math.floor(Math.random() * (MAX_COUNT - MIN_COUNT + 1)) + MIN_COUNT;
             countInput.value = randomCount;
             updateValuesFromCount();
-            statusEl.textContent = `Đã chọn ngẫu nhiên ${randomCount} phần tử.`;
         }
 
         function updateValuesFromInput() {
-            if (isRunning) return;
+            if (isPlaying) return;
+            
             const raw = valuesInput.value.trim();
             if (!raw) {
-                statusEl.textContent = "Vui lòng nhập ít nhất 2 giá trị.";
+                statusEl.textContent = "⚠️ Vui lòng nhập ít nhất 2 giá trị";
                 return;
             }
 
@@ -540,42 +1029,54 @@
                 .map(Number);
 
             if (parsed.some((num) => !Number.isFinite(num))) {
-                statusEl.textContent = "Chỉ nhập số nguyên, cách nhau bằng dấu phẩy.";
+                statusEl.textContent = "⚠️ Chỉ nhập số nguyên, cách nhau bằng dấu phẩy";
                 return;
             }
 
             if (parsed.length < MIN_COUNT || parsed.length > MAX_COUNT) {
-                statusEl.textContent = `Số phần tử phải từ ${MIN_COUNT} đến ${MAX_COUNT}.`;
+                statusEl.textContent = `⚠️ Số phần tử phải từ ${MIN_COUNT} đến ${MAX_COUNT}`;
                 return;
             }
 
-            values = parsed.map((num) => Math.max(1, Math.min(120, Math.round(num))));
-            countInput.value = values.length;
-            renderBars();
-            statusEl.textContent = "Đã áp dụng mảng tuỳ chỉnh.";
+            originalValues = parsed.map((num) => Math.max(1, Math.min(120, Math.round(num))));
+            countInput.value = originalValues.length;
+            reset();
+            statusEl.textContent = "✅ Đã áp dụng mảng tuỳ chỉnh";
         }
 
         function randomizeValues() {
-            if (isRunning) return;
-            values = generateRandomArray(values.length);
-            renderBars();
-            statusEl.textContent = "Đã tạo ngẫu nhiên giá trị cho từng phần tử.";
-            valuesInput.value = values.join(", ");
+            if (isPlaying) return;
+            
+            originalValues = generateRandomArray(originalValues.length);
+            valuesInput.value = originalValues.join(", ");
+            reset();
+            statusEl.textContent = "🎲 Đã tạo ngẫu nhiên giá trị cho từng phần tử";
         }
 
-        runBtn.addEventListener("click", toggleSimulation);
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        playBtn.addEventListener("click", play);
+        pauseBtn.addEventListener("click", pause);
+        stepBackBtn.addEventListener("click", stepBack);
+        stepForwardBtn.addEventListener("click", stepForward);
+        resetBtn.addEventListener("click", reset);
         shuffleBtn.addEventListener("click", shuffleValues);
         applyCountBtn.addEventListener("click", updateValuesFromCount);
         randomCountBtn.addEventListener("click", randomizeCount);
         randomValuesBtn.addEventListener("click", randomizeValues);
         applyValuesBtn.addEventListener("click", updateValuesFromInput);
+        
         speedInput.addEventListener("input", () => {
-            statusEl.textContent = `Tốc độ mỗi bước: ${speedInput.value} ms`;
+            statusEl.textContent = `⏱️ Tốc độ: ${speedInput.value} ms/bước`;
         });
 
-        renderBars();
-        countInput.value = values.length;
-        valuesInput.value = values.join(", ");
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        countInput.value = originalValues.length;
+        valuesInput.value = originalValues.join(", ");
+        reset();
     </script>
 </body>
 
