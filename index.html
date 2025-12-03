@@ -184,69 +184,66 @@
             appearance: none;
             background: transparent;
             cursor: pointer;
-            width: 180px;
-            height: 24px;
+            width: 160px;
         }
         
         input[type="range"]::-webkit-slider-track {
-            background: linear-gradient(90deg, #34d399 0%, #3b82f6 50%, #8b5cf6 100%);
+            background: linear-gradient(90deg, #38bdf8 0%, #94a3b8 50%, #ef4444 100%);
             height: 8px;
             border-radius: 4px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5), inset 0 1px 3px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
         }
         
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
             background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
-            height: 24px;
-            width: 24px;
+            height: 22px;
+            width: 22px;
             border-radius: 50%;
             border: 3px solid #ffffff;
-            box-shadow: 0 3px 10px rgba(56, 189, 248, 0.6), 0 0 20px rgba(56, 189, 248, 0.4);
+            box-shadow: 0 2px 8px rgba(56, 189, 248, 0.6), 0 0 0 1px rgba(0, 0, 0, 0.1);
             margin-top: -8px;
             transition: all 0.2s ease;
             cursor: grab;
         }
         
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.25);
-            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.8), 0 0 30px rgba(56, 189, 248, 0.6);
-        }
-        
         input[type="range"]::-webkit-slider-thumb:active {
             cursor: grabbing;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.8), 0 0 0 2px rgba(56, 189, 248, 0.3);
         }
         
         input[type="range"]::-moz-range-track {
-            background: linear-gradient(90deg, #34d399 0%, #3b82f6 50%, #8b5cf6 100%);
+            background: linear-gradient(90deg, #38bdf8 0%, #94a3b8 50%, #ef4444 100%);
             height: 8px;
             border-radius: 4px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5), inset 0 1px 3px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
         }
         
         input[type="range"]::-moz-range-thumb {
             background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
-            height: 24px;
-            width: 24px;
+            height: 22px;
+            width: 22px;
             border-radius: 50%;
             border: 3px solid #ffffff;
-            box-shadow: 0 3px 10px rgba(56, 189, 248, 0.6), 0 0 20px rgba(56, 189, 248, 0.4);
+            box-shadow: 0 2px 8px rgba(56, 189, 248, 0.6), 0 0 0 1px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
             cursor: grab;
         }
         
-        input[type="range"]::-moz-range-thumb:hover {
-            transform: scale(1.25);
-            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.8), 0 0 30px rgba(56, 189, 248, 0.6);
-        }
-        
         input[type="range"]::-moz-range-thumb:active {
             cursor: grabbing;
+        }
+        
+        input[type="range"]::-moz-range-thumb:hover {
             transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.8), 0 0 0 2px rgba(56, 189, 248, 0.3);
         }
         
         input[type="number"],
@@ -569,10 +566,16 @@
                         </button>
                     </div>
                     
-                    <div class="control-group">
-                        <span class="control-group-label">Tốc độ:</span>
-                        <input id="speed" type="range" min="300" max="2500" step="100" value="1000" title="Điều chỉnh tốc độ mô phỏng">
-                        <span id="speedValue" style="font-size: 0.9rem; color: #38bdf8; font-weight: 700; min-width: 50px;">1000ms</span>
+                    <div class="control-group" style="flex-direction: column; align-items: stretch; min-width: 220px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+                            <span class="control-group-label">Tốc độ:</span>
+                            <span id="speedDisplay" style="font-size: 0.9rem; color: #38bdf8; font-weight: 600;">1.0s</span>
+                        </div>
+                        <input id="speed" type="range" min="300" max="2500" step="100" value="1000" style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #94a3b8; margin-top: 0.2rem;">
+                            <span>Nhanh</span>
+                            <span>Chậm</span>
+                        </div>
                     </div>
                     
                     <div class="control-group">
@@ -674,7 +677,7 @@
         const resetBtn = document.getElementById("resetBtn");
         const shuffleBtn = document.getElementById("shuffleBtn");
         const speedInput = document.getElementById("speed");
-        const speedValue = document.getElementById("speedValue");
+        const speedDisplay = document.getElementById("speedDisplay");
         const countInput = document.getElementById("countInput");
         const applyCountBtn = document.getElementById("applyCountBtn");
         const randomCountBtn = document.getElementById("randomCountBtn");
@@ -758,7 +761,7 @@
                         j: i - 1,
                         key: key,
                         keyElementId: keyElement.id,
-                        actionText: `Chọn phần tử key = ${key} tại vị trí ${i} và nhấc lên`,
+                        actionText: `Chọn phần tử key = ${key} tại vị trí ${i + 1} và nhấc lên`,
                         actionType: "select",
                         keyIndex: i,
                         compareIndex: null,
@@ -798,7 +801,7 @@
                         j: j,
                         key: key,
                         keyElementId: keyElement.id,
-                        actionText: `So sánh: array[${j}] = ${array[j]} > key = ${key}`,
+                        actionText: `So sánh: array[${j + 1}] = ${array[j]} > key = ${key}`,
                         actionType: "compare",
                         keyIndex: i,
                         compareIndex: j,
@@ -823,7 +826,7 @@
                         j: j,
                         key: key,
                         keyElementId: keyElement.id,
-                        actionText: `Dịch ${shiftingValue} sang phải từ vị trí ${j} → ${j + 1}`,
+                        actionText: `Dịch ${shiftingValue} sang phải từ vị trí ${j + 1} → ${j + 2}`,
                         actionType: "shift",
                         keyIndex: i,
                         compareIndex: null,
@@ -845,7 +848,7 @@
                         j: j,
                         key: key,
                         keyElementId: keyElement.id,
-                        actionText: `So sánh: array[${j}] = ${array[j]} ≤ key = ${key} - Dừng dịch chuyển`,
+                        actionText: `So sánh: array[${j + 1}] = ${array[j]} ≤ key = ${key} - Dừng dịch chuyển`,
                         actionType: "compare",
                         keyIndex: i,
                         compareIndex: j,
@@ -869,7 +872,7 @@
                         j: j,
                         key: key,
                         keyElementId: keyElement.id,
-                        actionText: `Key = ${key} di chuyển sang trái đến cột ${finalPosition}`,
+                        actionText: `Key = ${key} di chuyển sang trái đến cột ${finalPosition + 1}`,
                         actionType: "move-horizontal",
                         keyIndex: finalPosition,
                         compareIndex: null,
@@ -892,7 +895,7 @@
                     j: j,
                     key: key,
                     keyElementId: keyElement.id,
-                    actionText: `Chèn key = ${key} vào vị trí ${finalPosition}`,
+                    actionText: `Chèn key = ${key} vào vị trí ${finalPosition + 1}`,
                     actionType: "insert",
                     keyIndex: finalPosition,
                     compareIndex: null,
@@ -950,14 +953,10 @@
                 let yOffset = 0;
 
                 // Check if element is in sorted portion (should stay green)
-                const isInSortedPortion = element.position < step.sortedUpTo;
+                // In insertion sort, positions 0 to i-1 are already sorted when processing position i
+                // So we check if element.position < step.i (for select, compare, shift states)
+                // But when element is being compared or sorted, we need special handling
                 
-                // Apply sorted class to all elements in the sorted portion (before sortedUpTo)
-                // Elements that are sorted should be green immediately and stay green
-                if (isInSortedPortion) {
-                    bar.classList.add("sorted");
-                }
-
                 // Key is being selected and lifted up
                 if (step.keyElementId === element.id) {
                     if (step.actionType === "select") {
@@ -990,13 +989,24 @@
                 else if (step.actionType === "complete") {
                     bar.classList.add("sorted");
                 }
-                // Element being compared (only if NOT in sorted portion)
-                else if (!isInSortedPortion && step.compareIndex !== null && element.position === step.compareIndex) {
+                // Element being compared
+                else if (step.compareIndex !== null && element.position === step.compareIndex) {
+                    // When comparing, this element is in the sorted portion and should be green
+                    bar.classList.add("sorted");
                     bar.classList.add("comparing");
                 }
-                // Element being shifted (only if NOT in sorted portion)
-                else if (!isInSortedPortion && step.shiftingIndices && step.shiftingIndices.includes(element.position)) {
+                // Element being shifted
+                else if (step.shiftingIndices && step.shiftingIndices.includes(element.position)) {
                     bar.classList.add("shifting");
+                }
+                // Apply sorted class to all elements in the sorted portion
+                // Elements at positions 0 to i-1 are sorted (before the key at position i)
+                else if (step.i !== null && element.position < step.i) {
+                    bar.classList.add("sorted");
+                }
+                // Also check sortedUpTo for other states (like after insert)
+                else if (element.position <= step.sortedUpTo) {
+                    bar.classList.add("sorted");
                 }
 
                 // Apply position
@@ -1020,7 +1030,11 @@
             statusEl.textContent = `${icon} ${step.actionText}`;
             
             // Update step info
-            stepInfoEl.textContent = `Step ${currentStepIndex + 1}/${steps.length} | i=${step.i ?? "-"} | j=${step.j ?? "-"} | key=${step.key ?? "-"}`;
+            // Display indices starting from 1 for better readability (j can be -1, which means no valid index)
+            const iDisplay = step.i !== null ? step.i + 1 : "-";
+            const jDisplay = step.j !== null && step.j >= 0 ? step.j + 1 : "-";
+            const keyDisplay = step.key ?? "-";
+            stepInfoEl.textContent = `Step ${currentStepIndex + 1}/${steps.length} | i=${iDisplay} | j=${jDisplay} | key=${keyDisplay}`;
         }
 
         function setCodeHighlight(lineKey) {
@@ -1249,14 +1263,6 @@
         }
 
         // ============================================
-        // SPEED DISPLAY UPDATE
-        // ============================================
-        function updateSpeedDisplay() {
-            const speed = speedInput.value;
-            speedValue.textContent = `${speed}ms`;
-        }
-
-        // ============================================
         // EVENT LISTENERS
         // ============================================
         playBtn.addEventListener("click", play);
@@ -1265,16 +1271,15 @@
         stepForwardBtn.addEventListener("click", stepForward);
         resetBtn.addEventListener("click", reset);
         shuffleBtn.addEventListener("click", shuffleValues);
-        speedInput.addEventListener("input", updateSpeedDisplay);
         applyCountBtn.addEventListener("click", updateValuesFromCount);
         randomCountBtn.addEventListener("click", randomizeCount);
         randomValuesBtn.addEventListener("click", randomizeValues);
         applyValuesBtn.addEventListener("click", updateValuesFromInput);
         
-        updateSpeedDisplay();
-        
         speedInput.addEventListener("input", () => {
-            statusEl.textContent = `⏱️ Tốc độ: ${speedInput.value} ms/bước`;
+            const speedValue = Number(speedInput.value);
+            const speedInSeconds = (speedValue / 1000).toFixed(1);
+            speedDisplay.textContent = `${speedInSeconds}s`;
         });
 
         // ============================================
